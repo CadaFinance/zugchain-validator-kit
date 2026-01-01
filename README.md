@@ -18,7 +18,7 @@ This package contains everything you need to join the ZugChain network as a vali
 Run this one-liner on your Ubuntu machine to download and install:
 
 ```bash
-git clone https://github.com/CadaFinance/zugchain-validator-kit.git && cd zugchain-validator-kit/scripts && sudo ./setup.sh
+git clone https://github.com/CadaFinance/zugchain-validator-kit.git && cd zugchain-validator-kit/scripts && chmod +x *.sh && sudo ./setup.sh
 ```
 
 ### Option 2: Manual Download
@@ -58,3 +58,18 @@ After the setup is complete, your services will be running in the background.
 - 4 CPU Cores
 - 8GB RAM (16GB recommended)
 - 500GB SSD
+
+## Network Requirements (Ports)
+
+You must open the following ports on your firewall/router to allow the node to peer with other nodes:
+
+| Service | Port | Protocol | Description |
+| :--- | :--- | :--- | :--- |
+| **Execution (Geth)** | `30303` | TCP & UDP | P2P peering for the Execution Layer |
+| **Consensus (Beacon)** | `13000` | TCP | P2P peering for the Consensus Layer |
+| **Consensus (Beacon)** | `12000` | UDP | P2P discovery for the Consensus Layer |
+
+**Optional (Local Use Only):**
+- `8545` TCP: Execution JSON-RPC (Keep closed or restricted)
+- `3500` TCP: Beacon API (Keep closed or restricted)
+- `4000` TCP: Beacon RPC (Keep closed or restricted)
