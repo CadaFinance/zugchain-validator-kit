@@ -176,16 +176,10 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation (v2.9 FULL AUTOMATION)..."
+    log_info "Running key generation (INTERACTIVE MODE)..."
+    log_warning "Please answer the prompts manually!"
     
-    # We use the OFFICIAL flags (Corrected):
-    # --language=English (Global)
-    # Reverting to --devnet_chain_setting (Required for custom chain)
-    # Using pipe to answer ALL interactive confirmations (discovered via interactive run):
-    # 1. Start Index
-    # 2. Keystore Password
-    # 3. Withdrawal Address Confirmation
-    # 4. Compounding Validators (no)
+    # We remove pipes and logging to let you see the prompts directly
     
     rm -rf "$WORK_DIR/deposit_cli.log"
     
@@ -195,7 +189,7 @@ generate_keys() {
          pip3 install eth_abi --quiet --break-system-packages 2>/dev/null || pip3 install eth_abi --quiet 2>/dev/null
     fi
     
-    printf "%s\n%s\n%s\nno\n" "$start_index" "$KEYSTORE_PASSWORD" "$WITHDRAWAL_ADDR" | $DEPOSIT_CLI \
+    $DEPOSIT_CLI \
         --language=English \
         existing-mnemonic \
         --num_validators $num_to_add \
@@ -205,14 +199,10 @@ generate_keys() {
         --keystore_password="$KEYSTORE_PASSWORD" \
         --withdrawal_address="$WITHDRAWAL_ADDR" \
         --devnet_chain_setting="$DEVNET_SETTINGS" \
-        --folder="$WORK_DIR" > "$WORK_DIR/deposit_cli.log" 2>&1
+        --folder="$WORK_DIR"
         
     if [ $? -ne 0 ]; then
         log_error "Key generation failed!"
-        echo -e "${RED}Detailed Error Log:${NC}"
-        echo -e "${DIM}--------------------------------------------------${NC}"
-        cat "$WORK_DIR/deposit_cli.log"
-        echo -e "${DIM}--------------------------------------------------${NC}"
         rm -rf "$WORK_DIR"
         exit 1
     fi
