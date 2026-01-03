@@ -150,6 +150,30 @@ setup_directories() {
     log_success "Directories and configurations active"
 }
 
+init_node() {
+    log_header "Initializing Blockchain Node"
+    
+    # Initialize Geth with custom genesis
+    # We must ensure the data directory is clean or compatible to avoid Chain ID mismatch (Mainnet vs ZugChain)
+    
+    if [ -d "${ZUG_DIR}/data/geth/geth/chaindata" ]; then
+        log_warning "Existing chain data detected."
+        log_info "Re-initializing genesis to ensure correct network (ZugChain)..."
+        # We remove the chaindata to force a correct init, as the user likely has Mainnet data now
+        rm -rf "${ZUG_DIR}/data/geth/geth" 
+    fi
+    
+    log_info "Initializing Geth Genesis..."
+    geth init --datadir="${ZUG_DIR}/data/geth" "${ZUG_DIR}/config/genesis.json"
+    
+    if [ $? -eq 0 ]; then
+        log_success "Geth initialized successfully"
+    else
+        log_error "Geth initialization failed!"
+        exit 1
+    fi
+}
+
 handle_keys() {
     log_header "Validator Key Management"
     
@@ -209,6 +233,7 @@ main() {
     # Start Installation
     install_dependencies
     setup_directories
+    init_node
     
     if [ "$MODE" == "1" ]; then
         # ENTERPRISE FLOW
