@@ -114,7 +114,11 @@ harden_ssh() {
     fi
     
     # Restart SSH
-    systemctl restart sshd
+    if systemctl list-unit-files | grep -q ssh.service; then
+        systemctl restart ssh
+    else
+        systemctl restart sshd
+    fi
     log_success "SSH Configuration Reloaded"
 }
 

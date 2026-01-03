@@ -38,9 +38,51 @@ load_credentials() {
         MNEMONIC=$(cat "${ZUG_DIR}/data/validators/mnemonic.txt")
         log_success "Mnemonic found (Legacy path)"
     else
-        log_warning "Mnemonic file not found!"
-        log_prompt "Enter your 24-word Mnemonic"
-        read -r MNEMONIC
+        if [ "$SETUP_MODE" == "true" ]; then
+            log_warning "No mnemonic found."
+            log_prompt "Do you want to generate a NEW mnemonic? [Y/n]"
+            read -r GEN_OPT
+            if [[ "$GEN_OPT" =~ ^[Yy] || -z "$GEN_OPT" ]]; then
+                 # Generate Mnemonic inline using Python
+                 log_info "Generating new mnemonic..."
+                 MNEMONIC=$(python3 -c "from mnemonic import Mnemonic; print(Mnemonic('english').generate(strength=256))" 2>/dev/null)
+                 
+                 if [ -z "$MNEMONIC" ]; then
+                     # Try installing if missing
+                     pip3 install mnemonic --quiet --break-system-packages 2>/dev/null
+                     MNEMONIC=$(python3 -c "from mnemonic import Mnemonic; print(Mnemonic('english').generate(strength=256))" 2>/dev/null)
+                 fi
+
+                 if [ -n "$MNEMONIC" ]; then
+                     echo ""
+                     echo -e "${ZUG_TEAL}╔══════════════════════════════════════════════════════════════════════════════╗${RESET}"
+                     echo -e "${ZUG_TEAL}║  ${ZUG_WHITE}${BOLD}NEW MNEMONIC GENERATED${RESET}                                                  ${ZUG_TEAL}║${RESET}"
+                     echo -e "${ZUG_TEAL}╚══════════════════════════════════════════════════════════════════════════════╝${RESET}"
+                     echo ""
+                     echo -e "  ${COLOR_WARNING}WRITE THIS DOWN SAFELY:${RESET}"
+                     echo -e "  $MNEMONIC"
+                     echo ""
+                     log_prompt "Press ENTER once saved"
+                     read -r
+                     
+                     # Save it
+                     mkdir -p "${ZUG_DIR}/secrets"
+                     echo "$MNEMONIC" > "${ZUG_DIR}/secrets/mnemonic.txt"
+                     chmod 600 "${ZUG_DIR}/secrets/mnemonic.txt"
+                 else
+                     log_error "Failed to generate mnemonic (python3-mnemonic missing?)"
+                     log_prompt "Enter your 24-word Mnemonic manually"
+                     read -r MNEMONIC
+                 fi
+            else
+                 log_prompt "Enter your 24-word Mnemonic"
+                 read -r MNEMONIC
+            fi
+        else
+            log_warning "Mnemonic file not found!"
+            log_prompt "Enter your 24-word Mnemonic"
+            read -r MNEMONIC
+        fi
     fi
 
     # Wallet Password
