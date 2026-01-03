@@ -54,29 +54,18 @@ After the setup is complete, your services will be running in the background.
 
 ## Requirements
 
-- Ubuntu 20.04 or later
-- 4 CPU Cores
-- 8GB RAM (16GB recommended)
-- 500GB SSD
+- Ubuntu 24.04 or later
+- 2 CPU Cores (4 recommended)  
+- 4GB RAM (16GB recommended)
+- 100GB SSD (500GB recommended)
 
 ## Network Requirements (Ports)
 
 You must open the following ports on your firewall/router to allow the node to peer with other nodes:
 
-| Service | Port | Protocol | Description |
-| :--- | :--- | :--- | :--- |
-| **Execution (Geth)** | `30303` | TCP & UDP | P2P peering for the Execution Layer |
-| **Consensus (Beacon)** | `13000` | TCP | P2P peering for the Consensus Layer |
-| **Consensus (Beacon)** | `12000` | UDP | P2P discovery for the Consensus Layer |
-
-| Type | Protocol | Port | Source | Why? |
+| Type | Protocol | Port | Source | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | Custom TCP | TCP | **30303** | `0.0.0.0/0` | Receive Blocks (Geth P2P). |
 | Custom UDP | UDP | **30303** | `0.0.0.0/0` | Network Discovery. |
 | Custom TCP | TCP | **13000** | `0.0.0.0/0` | Vote/Attest (Beacon P2P). |
 | Custom UDP | UDP | **12000** | `0.0.0.0/0` | Network Discovery. |
-
-**Optional (Local Use Only):**
-- `8545` TCP: Execution JSON-RPC (Keep closed or restricted)
-- `3500` TCP: Beacon API (Keep closed or restricted)
-- `4000` TCP: Beacon RPC (Keep closed or restricted)
