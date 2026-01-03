@@ -176,20 +176,19 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation (v2.3 UPDATE)..."
+    log_info "Running key generation (v2.4 UPDATE)..."
     
-    # We use the OFFICIAL flags (Corrected):
-    # --non_interactive removed (Not supported in this version)
-    # We rely on CLI args to be sufficient.
+    # We use the OFFICIAL flags (Corrected position):
+    # Flags like --language must be BEFORE the subcommand 'existing-mnemonic'
     
     # Ensure no previous failures left garbage
     rm -rf "$WORK_DIR/deposit_cli.log"
     
-    # We pipe '3' and 'y' as a failsafe for prompts, but rely on args first.
-    # language=english should skip language prompt.
-    # The pipe handles confirmation if validation fails.
-    printf "3\ny\n" | $DEPOSIT_CLI existing-mnemonic \
+    # Try global placement
+    $DEPOSIT_CLI \
         --language=english \
+        --non_interactive \
+        existing-mnemonic \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
         --mnemonic="$MNEMONIC" \
