@@ -94,6 +94,11 @@ load_credentials() {
         echo -n "  ${ZUG_TEAL}${BOLD}?${RESET} Enter Wallet Password: "
         read -s -r WALLET_PASSWORD
         echo ""
+        
+        # Save persistence for the service to use
+        mkdir -p "${ZUG_DIR}/secrets"
+        echo -n "$WALLET_PASSWORD" > "${ZUG_DIR}/secrets/wallet_password"
+        chmod 600 "${ZUG_DIR}/secrets/wallet_password"
     fi
 
     # Keystore Password
