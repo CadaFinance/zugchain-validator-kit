@@ -122,17 +122,18 @@ generate_keys() {
     # Try install deps quietly
     pip3 install mnemonic py_ecc eth-utils --quiet --break-system-packages 2>/dev/null || true
     
-    python3 << PYEOF
-import sys
-import os
-import json
-import secrets
-import time
-import uuid
-import sys
-from hashlib import sha256, pbkdf2_hmac
+# Function to read from TTY to avoid EOFError in heredoc
+def tty_input(prompt=""):
+    try:
+        with open("/dev/tty", "r") as tty:
+            print(prompt, end="", flush=True)
+            return tty.readline().strip()
+    except IOError:
+        return input(prompt)
 
-# Simple ANSI colors for python output
+# ... (Imports omitted for brevity as they are unchanged) ...
+
+# ... (Colors omitted) ...
 GREEN = '\033[0;32m'
 CYAN = '\033[0;36m'
 RED = '\033[0;31m'
@@ -142,7 +143,6 @@ BOLD = '\033[1m'
 try:
     from mnemonic import Mnemonic
     from py_ecc.bls import G2ProofOfPossession as bls
-    # Install check passed
 except ImportError:
     print(f"\n{RED}Error: Missing Python dependencies (mnemonic, py_ecc).{NC}")
     print("Please run: pip3 install mnemonic py_ecc eth-utils")
@@ -163,11 +163,11 @@ for i, word in enumerate(words):
 print("\n")
 
 print(f"{CYAN}Press ENTER once saved...{NC}")
-input()
+tty_input()
 
 # Verification
 print(f"{CYAN}Verify Word #1, #12, #24:{NC}")
-verify = input("  ➜ ")
+verify = tty_input("  ➜ ")
 expected = f"{words[0]} {words[11]} {words[23]}"
 
 if verify.strip() != expected:
