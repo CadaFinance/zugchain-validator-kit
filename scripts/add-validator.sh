@@ -176,16 +176,19 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation (v2.6 FINAL FIX)..."
+    log_info "Running key generation (v2.8 FULL AUTOMATION)..."
     
     # We use the OFFICIAL flags (Corrected):
     # --language=English (Global)
     # Reverting to --devnet_chain_setting (Required for custom chain)
-    # Using pipe '$start_index\ny\n' because the tool prompts to confirm the index!
+    # Using pipe to answer ALL interactive confirmations:
+    # 1. Start Index
+    # 2. Keystore Password
+    # 3. Withdrawal Address Confirmation (User reported this prompts too)
     
     rm -rf "$WORK_DIR/deposit_cli.log"
     
-    printf "%s\ny\n" "$start_index" | $DEPOSIT_CLI \
+    printf "%s\n%s\n%s\n" "$start_index" "$KEYSTORE_PASSWORD" "$WITHDRAWAL_ADDR" | $DEPOSIT_CLI \
         --language=English \
         existing-mnemonic \
         --num_validators $num_to_add \
