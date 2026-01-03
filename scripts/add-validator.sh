@@ -215,8 +215,26 @@ generate_keys() {
     elif [ -f "/usr/local/bin/validator" ]; then
         VALIDATOR_BIN="/usr/local/bin/validator"
     else
-        log_error "Validator binary not found! Please run setup.sh first."
-        exit 1
+        log_warning "Validator binary missing. Attempting to install..."
+        
+        # Self-repair: Download Prysm Validator
+        pushd /tmp > /dev/null
+        curl https://raw.githubusercontent.com/prysmaticlabs/prysm/master/prysm.sh --output prysm.sh 2>/dev/null
+        chmod +x prysm.sh
+        ./prysm.sh validator --download-only > /dev/null 2>&1
+        
+        if [ -f "./dist/validator" ]; then
+            mv ./dist/validator /usr/local/bin/validator
+            chmod +x /usr/local/bin/validator
+            VALIDATOR_BIN="/usr/local/bin/validator"
+            log_success "Validator binary installed"
+        else
+            log_error "Failed to download validator binary. Please run setup.sh."
+            exit 1
+        fi
+        
+        rm -rf prysm.sh dist
+        popd > /dev/null
     fi
 
     # Import
