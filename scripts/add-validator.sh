@@ -176,27 +176,28 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation (v2.2 FIX)..."
+    log_info "Running key generation (v2.3 UPDATE)..."
     
-    # We use the OFFICIAL flags to prevent interactivity issues:
-    # --language english (Lowercase)
-    # --non_interactive (Surpresses confirmations)
+    # We use the OFFICIAL flags (Corrected):
+    # --non_interactive removed (Not supported in this version)
+    # We rely on CLI args to be sufficient.
     
     # Ensure no previous failures left garbage
     rm -rf "$WORK_DIR/deposit_cli.log"
     
-    $DEPOSIT_CLI \
-        --language english \
-        existing-mnemonic \
+    # We pipe '3' and 'y' as a failsafe for prompts, but rely on args first.
+    # language=english should skip language prompt.
+    # The pipe handles confirmation if validation fails.
+    printf "3\ny\n" | $DEPOSIT_CLI existing-mnemonic \
+        --language=english \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
         --mnemonic="$MNEMONIC" \
         --mnemonic_language=english \
         --keystore_password="$KEYSTORE_PASSWORD" \
         --withdrawal_address="$WITHDRAWAL_ADDR" \
-        --devnet_chain_setting="$DEVNET_SETTINGS" \
-        --folder="$WORK_DIR" \
-        --non_interactive > "$WORK_DIR/deposit_cli.log" 2>&1
+        --chain=zugchain \
+        --folder="$WORK_DIR" > "$WORK_DIR/deposit_cli.log" 2>&1
         
     if [ $? -ne 0 ]; then
         log_error "Key generation failed!"
