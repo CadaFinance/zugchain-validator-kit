@@ -250,7 +250,8 @@ for i in range(num_validators):
     # Since we checked for py_ecc, we assume we can import better libs or rely on standard library.
     # Using Standard Library scrypt (Python 3.8+)
     import hashlib
-    decryption_key = hashlib.scrypt(password.encode(), salt=salt, n=n, r=r, p=p, dklen=dklen)
+    # defaults: maxmem=32MB. We need ~268MB for n=262144. Set limit to 1GB.
+    decryption_key = hashlib.scrypt(password.encode(), salt=salt, n=n, r=r, p=p, dklen=dklen, maxmem=1073741824)
     
     # AES-128-CTR Implementation (Manual or PyCryptodome)
     # Fallback to simple XOR if PyCrypto not available? NO, that's insecure.
