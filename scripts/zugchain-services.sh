@@ -65,10 +65,11 @@ ExecStart=/usr/bin/geth \\
     --authrpc.jwtsecret=${ZUG_DIR}/secrets/jwt.hex \\
     --metrics --metrics.addr=127.0.0.1 --metrics.port=6060 \\
     --syncmode=full \\
+    --gcmode=archive --state.scheme=path \\
     --bootnodes=enode://5a5927c4413f0a073d209c4721593109ae4375e10bfa68f53588c2f9a60c32e61f2a040433c341e5df29780d46f2ee070924b33393481e32214a430b69e38b7b@16.171.135.45:30303
-
+    
 # Security
-WaitStart=true
+# WaitStart removed (invalid directive)
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=true
@@ -105,6 +106,7 @@ ExecStart=/usr/local/bin/beacon-chain \\
     --accept-terms-of-use \\
     --contract-deployment-block=0 \\
     --min-sync-peers=0 \\
+    --deposit-contract=0x00000000219ab540356cBB839Cbe05303d7705Fa \\
     --bootstrap-node=enr:-Mq4QIFjlF_NMt3t8zgVcoKI8gp5Pxm63Yv6gCqzlnJWjPimA6V0L9UGuQS7eqZrLiOa7bP24_eAt1U7BhCp5ES8zUmGAZt_-DhUh2F0dG5ldHOIAAAAAIABAACEZXRoMpBIuSGSIAAABf__________gmlkgnY0gmlwhKwfLf-EcXVpY4IyyIlzZWNwMjU2azGhAxcmRn6UAdFt9sRL7cQ0i7K8afOjHSrEowD3RqIf4NAeiHN5bmNuZXRzD4N0Y3CCMsiDdWRwgi7g \\
     --monitoring-host=0.0.0.0 --monitoring-port=8080
 

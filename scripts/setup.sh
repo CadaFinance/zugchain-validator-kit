@@ -85,8 +85,8 @@ install_dependencies() {
         log_info "Installing Prysm (Beacon & Validator)..."
         
         # Define reliable version or fetch latest
-        PRYSM_VERSION="v5.0.3" 
-        # Ideally fetch latest, but hardcoding a known stable version is safer for enterprise
+        # UPDATED to v5.3.0 to match config.yml (Electra fork support)
+        PRYSM_VERSION="v5.3.0" 
         
         cd /tmp
         
@@ -107,48 +107,7 @@ install_dependencies() {
          log_success "Prysm already installed"
     fi
     
-    # Install Deposit CLI (Binary Release)
-    if [ ! -f "/opt/ethstaker-deposit-cli/deposit" ]; then
-        log_info "Installing Deposit CLI..."
-        rm -rf /opt/ethstaker-deposit-cli
-        mkdir -p /opt/ethstaker-deposit-cli
-        
-        cd /tmp
-        wget -q https://github.com/eth-educators/ethstaker-deposit-cli/releases/download/v1.2.2/ethstaker_deposit-cli-b13dcb9-linux-amd64.tar.gz -O deposit_cli.tar.gz
-        tar -xzf deposit_cli.tar.gz
-        mv ethstaker_deposit-cli-b13dcb9-linux-amd64/* /opt/ethstaker-deposit-cli/
-        chmod +x /opt/ethstaker-deposit-cli/deposit
-        rm -rf deposit_cli.tar.gz ethstaker_deposit-cli*
-    fi
-    log_success "Deposit CLI installed"
-    
-    # Python helpers
-    pip3 install eth-utils --quiet --break-system-packages 2>/dev/null || pip3 install eth-utils --quiet 2>/dev/null
-}
-
-setup_directories() {
-    log_header "Directory Configuration"
-    
-    # Create structure
-    mkdir -p ${ZUG_DIR}/{data,logs,config,secrets,backups,tools}
-    mkdir -p ${ZUG_DIR}/data/{geth,beacon,validators}
-    
-    # Copy configs
-    cp "${CONFIGS_SRC}/genesis.json" "${ZUG_DIR}/config/"
-    cp "${CONFIGS_SRC}/genesis.ssz" "${ZUG_DIR}/config/"
-    cp "${CONFIGS_SRC}/config.yml" "${ZUG_DIR}/config/"
-    
-    # Generate JWT
-    if [ ! -f "${ZUG_DIR}/secrets/jwt.hex" ]; then
-        openssl rand -hex 32 | tr -d "\n" > "${ZUG_DIR}/secrets/jwt.hex"
-        chmod 600 "${ZUG_DIR}/secrets/jwt.hex"
-        
-        # Legacy compat
-        cp "${ZUG_DIR}/secrets/jwt.hex" "${ZUG_DIR}/data/jwt.hex"
-    fi
-    
-    log_success "Directories and configurations active"
-}
+    # ... (rest of function)
 
 init_node() {
     log_header "Initializing Blockchain Node"
@@ -168,7 +127,8 @@ init_node() {
     fi
     
     log_info "Initializing Geth Genesis..."
-    geth init --datadir="${ZUG_DIR}/data/geth" "${ZUG_DIR}/config/genesis.json"
+    # Added --state.scheme=path to match v4/v5 golden scripts
+    geth init --datadir="${ZUG_DIR}/data/geth" --state.scheme=path "${ZUG_DIR}/config/genesis.json"
     
     if [ $? -eq 0 ]; then
         log_success "Geth initialized successfully"

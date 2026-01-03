@@ -101,6 +101,7 @@ start_legacy() {
         --authrpc.addr="127.0.0.1" --authrpc.port=8551 --authrpc.vhosts="*" \
         --authrpc.jwtsecret="$JWT_SECRET" \
         --syncmode=full \
+        --gcmode=archive --state.scheme=path \
         --bootnodes="${MAIN_ENODE}" \
         > ${ZUG_DIR}/logs/geth.log 2>&1 &
     
@@ -127,6 +128,7 @@ start_legacy() {
         --genesis-beacon-api-url="http://${MAIN_NODE_IP}:3500" \
         --bootstrap-node="${MAIN_ENR}" \
         --p2p-host-ip="${PUBLIC_IP}" \
+        --monitoring-host=0.0.0.0 --monitoring-port=8080 \
         > ${ZUG_DIR}/logs/beacon.log 2>&1 &
     
     echo $! > ${ZUG_DIR}/beacon.pid
