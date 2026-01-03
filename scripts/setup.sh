@@ -94,16 +94,23 @@ install_dependencies() {
     fi
     log_success "Prysm installed"
     
-    # Install Deposit CLI
-    if [ ! -d "/opt/ethstaker-deposit-cli" ]; then
+    # Install Deposit CLI (Binary Release)
+    if [ ! -f "/opt/ethstaker-deposit-cli/deposit" ]; then
         log_info "Installing Deposit CLI..."
-        cd /opt
-        git clone https://github.com/ethereum/staking-deposit-cli.git ethstaker-deposit-cli &> /dev/null
-        cd ethstaker-deposit-cli
-        pip3 install -r requirements.txt &> /dev/null
-        python3 setup.py install &> /dev/null
+        rm -rf /opt/ethstaker-deposit-cli
+        mkdir -p /opt/ethstaker-deposit-cli
+        
+        cd /tmp
+        wget -q https://github.com/eth-educators/ethstaker-deposit-cli/releases/download/v1.2.2/ethstaker_deposit-cli-b13dcb9-linux-amd64.tar.gz -O deposit_cli.tar.gz
+        tar -xzf deposit_cli.tar.gz
+        mv ethstaker_deposit-cli-b13dcb9-linux-amd64/* /opt/ethstaker-deposit-cli/
+        chmod +x /opt/ethstaker-deposit-cli/deposit
+        rm -rf deposit_cli.tar.gz ethstaker_deposit-cli*
     fi
     log_success "Deposit CLI installed"
+    
+    # Python helpers
+    pip3 install eth-utils --quiet --break-system-packages 2>/dev/null || pip3 install eth-utils --quiet 2>/dev/null
 }
 
 setup_directories() {
