@@ -266,11 +266,11 @@ for i in range(num_validators):
         # Fallback: OpenSSL via subprocess if python lib missing
         # This is hacky but universal on Linux
         import subprocess
-        p = subprocess.Popen(
-            ['openssl', 'enc', '-aes-128-ctr', '-K', decryption_key[:16].hex(), '-iv', iv.hex() + '0000000000000000'],
+        proc = subprocess.Popen(
+            ['openssl', 'enc', '-aes-128-ctr', '-K', decryption_key[:16].hex(), '-iv', iv.hex()],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE
         )
-        ciphertext, _ = p.communicate(input=privkey.to_bytes(32, 'big'))
+        ciphertext, _ = proc.communicate(input=privkey.to_bytes(32, 'big'))
 
     checksum = sha256(decryption_key[16:32] + ciphertext).hexdigest()
     
