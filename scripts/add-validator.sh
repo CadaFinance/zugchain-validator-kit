@@ -176,18 +176,17 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation (v2.4 UPDATE)..."
+    log_info "Running key generation (v2.5 FINAL)..."
     
-    # We use the OFFICIAL flags (Corrected position):
-    # Flags like --language must be BEFORE the subcommand 'existing-mnemonic'
+    # We use the OFFICIAL flags (Corrected):
+    # --language=English (Global)
+    # Reverting to --devnet_chain_setting (Required for custom chain)
+    # Using pipe '\ny\n' (Enter for language default, y for confirmation)
     
-    # Ensure no previous failures left garbage
     rm -rf "$WORK_DIR/deposit_cli.log"
     
-    # Try global placement
-    $DEPOSIT_CLI \
-        --language=english \
-        --non_interactive \
+    printf "\ny\n" | $DEPOSIT_CLI \
+        --language=English \
         existing-mnemonic \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
@@ -195,7 +194,7 @@ generate_keys() {
         --mnemonic_language=english \
         --keystore_password="$KEYSTORE_PASSWORD" \
         --withdrawal_address="$WITHDRAWAL_ADDR" \
-        --chain=zugchain \
+        --devnet_chain_setting="$DEVNET_SETTINGS" \
         --folder="$WORK_DIR" > "$WORK_DIR/deposit_cli.log" 2>&1
         
     if [ $? -ne 0 ]; then
