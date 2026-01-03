@@ -122,6 +122,10 @@ generate_keys() {
     # Try install deps quietly
     pip3 install mnemonic py_ecc eth-utils --quiet --break-system-packages 2>/dev/null || true
     
+    python3 << PYEOF
+import sys
+import os
+
 # Function to read from TTY to avoid EOFError in heredoc
 def tty_input(prompt=""):
     try:
