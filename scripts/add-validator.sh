@@ -157,10 +157,16 @@ generate_keys() {
     read -r RAW_WITHDRAWAL_ADDR
     
     # Checksum the address using Python to avoid issues
+    # First try to verify if module exists, if not install it
+    if ! python3 -c "import eth_utils" 2>/dev/null; then
+         log_info "Installing missing python utils..."
+         pip3 install eth-utils --quiet --break-system-packages 2>/dev/null || pip3 install eth-utils --quiet 2>/dev/null
+    fi
+
     WITHDRAWAL_ADDR=$(python3 -c "from eth_utils import to_checksum_address; print(to_checksum_address('${RAW_WITHDRAWAL_ADDR}'))" 2>/dev/null)
     
     if [ -z "$WITHDRAWAL_ADDR" ]; then
-        log_warning "Address checksum failed, using raw input (might fail)..."
+        log_warning "Address checksum failed (Python error). Using raw input."
         WITHDRAWAL_ADDR="$RAW_WITHDRAWAL_ADDR"
     else
         log_info "Address formatted: $WITHDRAWAL_ADDR"
@@ -169,7 +175,9 @@ generate_keys() {
     cd "$WORK_DIR"
     
     log_info "Running key generation..."
-    $DEPOSIT_CLI existing-mnemonic \
+    
+    # We pipe 'yes' to handle potential "Are you sure?" prompts for non-checksummed addresses
+    yes | $DEPOSIT_CLI existing-mnemonic \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
         --mnemonic="$MNEMONIC" \
