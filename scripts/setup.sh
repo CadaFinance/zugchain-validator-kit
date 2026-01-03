@@ -58,6 +58,24 @@ checks_preflight() {
     echo ""
 }
 
+cleanup_previous_state() {
+    log_header "Cleaning Up Previous State"
+    
+    # 1. Stop Systemd Services
+    log_info "Stopping services..."
+    systemctl stop zugchain-geth zugchain-beacon zugchain-validator 2>/dev/null
+    
+    # 2. Kill Lingering Processes
+    log_info "Killing lingering processes..."
+    pkill -9 geth 2>/dev/null || true
+    pkill -9 beacon-chain 2>/dev/null || true
+    pkill -9 validator 2>/dev/null || true
+    
+    # Wait a moment for ports to clear
+    sleep 2
+    log_success "System state cleaned"
+}
+
 install_dependencies() {
     log_header "Installing Core Dependencies"
     
@@ -176,6 +194,7 @@ handle_keys() {
 main() {
     check_root
     print_banner
+    cleanup_previous_state
     checks_preflight
     
     # Mode Selection
