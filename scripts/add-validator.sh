@@ -176,19 +176,12 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation (v2.8 FULL AUTOMATION)..."
+    log_info "Running key generation (INTERACTIVE MODE)..."
+    log_warning "Please answer the prompts manually!"
     
-    # We use the OFFICIAL flags (Corrected):
-    # --language=English (Global)
-    # Reverting to --devnet_chain_setting (Required for custom chain)
-    # Using pipe to answer ALL interactive confirmations:
-    # 1. Start Index
-    # 2. Keystore Password
-    # 3. Withdrawal Address Confirmation (User reported this prompts too)
+    # We remove pipes and logging to let you see the prompts directly
     
-    rm -rf "$WORK_DIR/deposit_cli.log"
-    
-    printf "%s\n%s\n%s\n" "$start_index" "$KEYSTORE_PASSWORD" "$WITHDRAWAL_ADDR" | $DEPOSIT_CLI \
+    $DEPOSIT_CLI \
         --language=English \
         existing-mnemonic \
         --num_validators $num_to_add \
@@ -198,7 +191,7 @@ generate_keys() {
         --keystore_password="$KEYSTORE_PASSWORD" \
         --withdrawal_address="$WITHDRAWAL_ADDR" \
         --devnet_chain_setting="$DEVNET_SETTINGS" \
-        --folder="$WORK_DIR" > "$WORK_DIR/deposit_cli.log" 2>&1
+        --folder="$WORK_DIR"
         
     if [ $? -ne 0 ]; then
         log_error "Key generation failed!"
