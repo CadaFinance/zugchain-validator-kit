@@ -176,9 +176,15 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    # We pipe 'yes' to handle potential "Are you sure?" prompts
-    yes | $DEPOSIT_CLI existing-mnemonic \
-        --language=english \
+    log_info "Running key generation..."
+    
+    # We use the OFFICIAL flags to prevent interactivity issues:
+    # --language English (Global flag, must be first)
+    # --non_interactive (Surpresses confirmations)
+    
+    $DEPOSIT_CLI \
+        --language English \
+        existing-mnemonic \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
         --mnemonic="$MNEMONIC" \
@@ -186,7 +192,8 @@ generate_keys() {
         --keystore_password="$KEYSTORE_PASSWORD" \
         --withdrawal_address="$WITHDRAWAL_ADDR" \
         --devnet_chain_setting="$DEVNET_SETTINGS" \
-        --folder="$WORK_DIR" > "$WORK_DIR/deposit_cli.log" 2>&1
+        --folder="$WORK_DIR" \
+        --non_interactive > "$WORK_DIR/deposit_cli.log" 2>&1
         
     if [ $? -ne 0 ]; then
         log_error "Key generation failed!"
