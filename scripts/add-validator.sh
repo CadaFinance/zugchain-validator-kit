@@ -269,10 +269,17 @@ generate_keys() {
     echo -e "${ZUG_TEAL}╚══════════════════════════════════════════════════════════════════════════════╝${RESET}"
     echo ""
     
-    # Install eth-abi if missing (Correct package name is eth-abi, module is eth_abi)
+    # Install eth-abi if missing (Using comprehensive install from working setup script)
     if ! python3 -c "import eth_abi" 2>/dev/null; then
          log_info "Installing missing python abi..."
-         pip3 install eth-abi --quiet --break-system-packages 2>/dev/null || pip3 install eth-abi --quiet 2>/dev/null
+         # Removing quiet flags to see errors
+         pip3 install eth-abi web3 eth-utils --break-system-packages --ignore-installed typing_extensions || \
+         pip3 install eth-abi web3 eth-utils --ignore-installed typing_extensions
+         
+         if [ $? -ne 0 ]; then
+             log_error "Failed to install python dependencies. Please check your internet or pip configuration."
+             # Do not exit, try to continue, but likely will fail
+         fi
     fi
     
     python3 << PYEOF
