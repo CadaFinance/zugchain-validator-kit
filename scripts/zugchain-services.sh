@@ -107,6 +107,8 @@ ExecStart=/usr/local/bin/beacon-chain \\
     --contract-deployment-block=0 \\
     --min-sync-peers=0 \\
     --deposit-contract=0x00000000219ab540356cBB839Cbe05303d7705Fa \\
+    --checkpoint-sync-url=http://16.171.135.45:3500 \\
+    --genesis-beacon-api-url=http://16.171.135.45:3500 \\
     --bootstrap-node=enr:-Mq4QIFjlF_NMt3t8zgVcoKI8gp5Pxm63Yv6gCqzlnJWjPimA6V0L9UGuQS7eqZrLiOa7bP24_eAt1U7BhCp5ES8zUmGAZt_-DhUh2F0dG5ldHOIAAAAAIABAACEZXRoMpBIuSGSIAAABf__________gmlkgnY0gmlwhKwfLf-EcXVpY4IyyIlzZWNwMjU2azGhAxcmRn6UAdFt9sRL7cQ0i7K8afOjHSrEowD3RqIf4NAeiHN5bmNuZXRzD4N0Y3CCMsiDdWRwgi7g \\
     --monitoring-host=0.0.0.0 --monitoring-port=8080
 
