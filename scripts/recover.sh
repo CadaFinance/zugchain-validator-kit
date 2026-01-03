@@ -25,9 +25,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PACKAGE_ROOT="$(dirname "$SCRIPT_DIR")"
 CONFIGS_SRC="${PACKAGE_ROOT}/configs"
 
-MAIN_NODE_IP="16.171.13.62"
-CHAIN_ID=4545072
-NETWORK_ID=4545072
+MAIN_NODE_IP="16.171.135.45"
+CHAIN_ID=1843932
+NETWORK_ID=1843932
 DEPOSIT_CONTRACT="0x00000000219ab540356cBB839Cbe05303d7705Fa"
 ZUG_DIR="/opt/zugchain-validator"
 FORK_VERSION="0x20000000"
@@ -408,9 +408,9 @@ start_services() {
     print_step "4" "Starting Validator Services"
     
     # Bootnodes from main chain
-    MAIN_ENODE="enode://47a17c0103b04d6091d4a12d686f7dd70b0b921de79c55b95ce8a7c58fbf50a8a71254902f1233efd02b0dfdbf80794ba7234b0764ea94a648fee6860fd58bd2@45.151.155.216:30303"
-    MAIN_ENR="enr:-Mq4QDzEHBApbHwpwNWXfOcNDPP1xD20Du0q6fWEda-1IH6mEilreU9PqBAhWPt8PPxfWuTKVNhpriu9b9pflKue5XyGAZtRHUuRh2F0dG5ldHOIAAAAMAAAAACEZXRoMpDm_BAkIAAABf__________gmlkgnY0gmlwhC2Xm9iEcXVpY4IyyIlzZWNwMjU2azGhAnSsXx5CrkvE1DvbxQWKR0cH507ap3D1ujUvYtOG_o-qiHN5bmNuZXRzD4N0Y3CCMsiDdWRwgi7g"
-
+    MAIN_ENODE="enode://5a5927c4413f0a073d209c4721593109ae4375e10bfa68f53588c2f9a60c32e61f2a040433c341e5df29780d46f2ee070924b33393481e32214a430b69e38b7b@16.171.135.45:30303"
+    MAIN_ENR="enr:-Mq4QIFjlF_NMt3t8zgVcoKI8gp5Pxm63Yv6gCqzlnJWjPimA6V0L9UGuQS7eqZrLiOa7bP24_eAt1U7BhCp5ES8zUmGAZt_-DhUh2F0dG5ldHOIAAAAAIABAACEZXRoMpBIuSGSIAAABf__________gmlkgnY0gmlwhKwfLf-EcXVpY4IyyIlzZWNwMjU2azGhAxcmRn6UAdFt9sRL7cQ0i7K8afOjHSrEowD3RqIf4NAeiHN5bmNuZXRzD4N0Y3CCMsiDdWRwgi7g"
+ 
     log_info "Getting bootnode information from main node..."
     # Ensure jq is available
     if ! command -v jq &> /dev/null; then
