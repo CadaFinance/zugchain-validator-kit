@@ -161,6 +161,10 @@ init_node() {
         log_info "Re-initializing genesis to ensure correct network (ZugChain)..."
         # We remove the chaindata to force a correct init, as the user likely has Mainnet data now
         rm -rf "${ZUG_DIR}/data/geth/geth" 
+        
+        # Also wipe beacon data to avoid "unknown finalized root" errors from previous bad state
+        rm -rf "${ZUG_DIR}/data/beacon"
+        mkdir -p "${ZUG_DIR}/data/beacon"
     fi
     
     log_info "Initializing Geth Genesis..."
