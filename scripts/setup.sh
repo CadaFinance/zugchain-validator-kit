@@ -99,12 +99,12 @@ install_dependencies() {
     log_success "Geth installed ($(geth version | head -n1 | awk '{print $3}'))"
     
     # Install Prysm (Direct Binary Download for Stability)
-    if ! command -v beacon-chain &> /dev/null; then
-        log_info "Installing Prysm (Beacon & Validator)..."
-        
-        # Define reliable version or fetch latest
-        # UPDATED to v5.3.0 to match config.yml (Electra fork support)
-        PRYSM_VERSION="v5.3.0" 
+    # ALWAYS download to ensure correct version (v5.3.0 for Electra support)
+    PRYSM_VERSION="v5.3.0"
+    CURRENT_VERSION=$(beacon-chain --version 2>/dev/null | grep -oP 'v\d+\.\d+\.\d+' | head -1 || echo "none")
+    
+    if [ "$CURRENT_VERSION" != "$PRYSM_VERSION" ]; then
+        log_info "Installing/Updating Prysm to ${PRYSM_VERSION} (current: ${CURRENT_VERSION})..."
         
         cd /tmp
         
@@ -112,17 +112,17 @@ install_dependencies() {
         log_info "Downloading Beacon Chain..."
         curl -L "https://github.com/prysmaticlabs/prysm/releases/download/${PRYSM_VERSION}/beacon-chain-${PRYSM_VERSION}-linux-amd64" -o beacon-chain
         chmod +x beacon-chain
-        mv beacon-chain /usr/local/bin/beacon-chain
+        mv -f beacon-chain /usr/local/bin/beacon-chain
         
         # Download Validator
         log_info "Downloading Validator..."
         curl -L "https://github.com/prysmaticlabs/prysm/releases/download/${PRYSM_VERSION}/validator-${PRYSM_VERSION}-linux-amd64" -o validator
         chmod +x validator
-        mv validator /usr/local/bin/validator
+        mv -f validator /usr/local/bin/validator
         
-        log_success "Prysm installed successfully"
+        log_success "Prysm ${PRYSM_VERSION} installed successfully"
     else
-         log_success "Prysm already installed"
+         log_success "Prysm already at version ${PRYSM_VERSION}"
     fi
     
     # Install Deposit CLI (Binary Release)
