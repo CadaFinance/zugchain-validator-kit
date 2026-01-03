@@ -154,9 +154,21 @@ generate_keys() {
     
     echo ""
     log_prompt "Enter Withdrawal Address (0x...)"
-    read -r WITHDRAWAL_ADDR
+    read -r RAW_WITHDRAWAL_ADDR
+    
+    # Checksum the address using Python to avoid issues
+    WITHDRAWAL_ADDR=$(python3 -c "from eth_utils import to_checksum_address; print(to_checksum_address('${RAW_WITHDRAWAL_ADDR}'))" 2>/dev/null)
+    
+    if [ -z "$WITHDRAWAL_ADDR" ]; then
+        log_warning "Address checksum failed, using raw input (might fail)..."
+        WITHDRAWAL_ADDR="$RAW_WITHDRAWAL_ADDR"
+    else
+        log_info "Address formatted: $WITHDRAWAL_ADDR"
+    fi
     
     cd "$WORK_DIR"
+    
+    log_info "Running key generation..."
     $DEPOSIT_CLI existing-mnemonic \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
@@ -165,10 +177,14 @@ generate_keys() {
         --keystore_password="$KEYSTORE_PASSWORD" \
         --withdrawal_address="$WITHDRAWAL_ADDR" \
         --devnet_chain_setting="$DEVNET_SETTINGS" \
-        --folder="$WORK_DIR" > /dev/null 2>&1
+        --folder="$WORK_DIR" > "$WORK_DIR/deposit_cli.log" 2>&1
         
     if [ $? -ne 0 ]; then
-        log_error "Key generation failed. Check inputs."
+        log_error "Key generation failed!"
+        echo -e "${RED}Detailed Error Log:${NC}"
+        echo -e "${DIM}--------------------------------------------------${NC}"
+        cat "$WORK_DIR/deposit_cli.log"
+        echo -e "${DIM}--------------------------------------------------${NC}"
         rm -rf "$WORK_DIR"
         exit 1
     fi
