@@ -176,14 +176,17 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation..."
+    log_info "Running key generation (v2.2 FIX)..."
     
     # We use the OFFICIAL flags to prevent interactivity issues:
-    # --language English (Global flag, must be first)
+    # --language english (Lowercase)
     # --non_interactive (Surpresses confirmations)
     
+    # Ensure no previous failures left garbage
+    rm -rf "$WORK_DIR/deposit_cli.log"
+    
     $DEPOSIT_CLI \
-        --language English \
+        --language english \
         existing-mnemonic \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
