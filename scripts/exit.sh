@@ -1,96 +1,123 @@
 #!/bin/bash
+
 #===============================================================================
-# ZUG CHAIN - VALIDATOR EXIT SCRIPT
+#
+#    ███████╗ ██╗   ██╗  ██████╗      ██████╗ ██╗  ██╗ █████╗ ██╗███╗   ██╗
+#    ╚══███╔╝ ██║   ██║ ██╔════╝     ██╔════╝ ██║  ██║ ██╔══██╗██║████╗  ██║
+#      ███╔╝  ██║   ██║ ██║  ███╗    ██║      ███████║ ███████║██║██╔██╗ ██║
+#     ███╔╝   ██║   ██║ ██║   ██║    ██║      ██╔══██║ ██╔══██║██║██║╚██╗██║
+#    ███████╗ ╚██████╔╝ ╚██████╔╝    ╚██████╗ ██║  ██║██║  ██║██║██║ ╚████║
+#    ╚══════╝ ╚═════╝   ╚═════╝      ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
+#
+#    Voluntary Exit v2.0
+#    Safety-first validator exit procedure
+#
 #===============================================================================
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m'
+# Import Utilities
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${SCRIPT_DIR}/utils.sh" || { echo "Error: utils.sh not found"; exit 1; }
 
-log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
-log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-log_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
-
-# Check root
-if [[ $EUID -ne 0 ]]; then
-    log_error "This script must be run as root"
-    exit 1
-fi
-
-TOOLS_DIR="/opt/zugchain-validator/tools"
+ZUG_DIR="/opt/zugchain-validator"
+TOOLS_DIR="${ZUG_DIR}/tools"
 PRYSMCTL="${TOOLS_DIR}/prysmctl"
 PRYSM_VERSION="v5.3.0"
 
-log_info "Preparing Validator Exit Process..."
-
-# 1. Prepare Directory & Download prysmctl if needed
-if [ ! -f "$PRYSMCTL" ]; then
-    log_info "Prysmctl not found. Downloading version ${PRYSM_VERSION}..."
+ensure_prysmctl() {
+    [ -f "$PRYSMCTL" ] && return
+    
+    log_info "Downloading prysmctl..."
     mkdir -p "$TOOLS_DIR"
-    
     wget -q "https://github.com/prysmaticlabs/prysm/releases/download/${PRYSM_VERSION}/prysmctl-${PRYSM_VERSION}-linux-amd64" -O "$PRYSMCTL"
+    chmod +x "$PRYSMCTL"
+}
+
+get_validator_info() {
+    log_info "Fetching validator info..."
     
-    if [ $? -eq 0 ]; then
-        chmod +x "$PRYSMCTL"
-        log_success "Prysmctl installed to $PRYSMCTL"
-    else
-        log_error "Failed to download prysmctl. Check internet connection."
+    # Simple check for active keys
+    count=$(find ${ZUG_DIR}/data/validators/validator_keys/keystores -name "keystore-*.json" 2>/dev/null | wc -l)
+    
+    if [ "$count" -eq 0 ]; then
+        log_error "No keys found to exit."
         exit 1
     fi
-else
-    log_info "Prysmctl found at $PRYSMCTL"
-fi
+    
+    log_success "Found $count validator(s)"
+}
 
-# 2. Check Wallet Files
-WALLET_DIR="/opt/zugchain-validator/data/validators/wallet"
-PASS_FILE="/opt/zugchain-validator/data/validators/wallet_password.txt"
-
-if [ ! -d "$WALLET_DIR" ]; then
-    log_error "Wallet directory not found at $WALLET_DIR"
-    exit 1
-fi
-
-if [ ! -f "$PASS_FILE" ]; then
-    log_error "Password file not found at $PASS_FILE"
-    exit 1
-fi
-
-# 3. Execute Exit
-log_warning "==================================================="
-log_warning " AUTHORIZATION REQUIRED"
-log_warning "==================================================="
-log_warning "You are about to exit your validator from the network."
-log_warning "This action is IRREVERSIBLE."
-log_warning "Your 32 ZUG + Rewards will be withdrawn to your address."
-log_warning "Wait time: ~27 hours (256 epochs) after activation."
-log_warning "==================================================="
-echo ""
-read -p "Type 'EXIT' to confirm and proceed: " CONFIRM
-
-if [ "$CONFIRM" != "EXIT" ]; then
-    log_error "Operation cancelled by user."
-    exit 0
-fi
-
-echo ""
-log_info "Starting exit procedure using local RPC (127.0.0.1:4000)..."
-log_info "Follow the on-screen prompts to select your account."
-
-"$PRYSMCTL" validator exit \
-  --wallet-dir="$WALLET_DIR" \
-  --beacon-rpc-provider="127.0.0.1:4000" \
-  --wallet-password-file="$PASS_FILE"
-
-if [ $? -eq 0 ]; then
+show_warning() {
     echo ""
-    log_success "Exit command executed successfully."
-    log_info "If you saw 'Success', your validator is now in the exit queue."
-    log_info "Do NOT stop your validator service until the exit epoch is reached."
-else
+    echo -e "${COLOR_ERROR}╔══════════════════════════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${COLOR_ERROR}║   ${ZUG_WHITE}${BOLD}⚠️  VOLUNTARY EXIT - THIS ACTION IS IRREVERSIBLE ⚠️${RESET}${COLOR_ERROR}                       ║${RESET}"
+    echo -e "${COLOR_ERROR}╚══════════════════════════════════════════════════════════════════════════════╝${RESET}"
     echo ""
-    log_error "Exit command failed."
-    log_warning "If the error was 'not active long enough', please wait and try again later."
-fi
+    echo -e "  ${ZUG_WHITE}${BOLD}Implications:${RESET}"
+    echo -e "  1. Your validator will enter the exit queue."
+    echo -e "  2. You must keep running until exit epoch (~27 hours)."
+    echo -e "  3. Stake + Rewards will be withdrawn to your withdrawal address."
+    echo ""
+}
+
+confirm_exit() {
+    echo -e "${COLOR_WARNING}Type '${ZUG_WHITE}I UNDERSTAND EXIT IS PERMANENT${COLOR_WARNING}' to proceed:${RESET}"
+    read -r CONFIRM
+    
+    if [ "$CONFIRM" != "I UNDERSTAND EXIT IS PERMANENT" ]; then
+        log_error "Confirmation failed. Aborting."
+        exit 0
+    fi
+}
+
+backup_slashing_protection() {
+    log_info "Exporting safety backup..."
+    BACKUP_DIR="${ZUG_DIR}/backups/pre-exit-$(date +%Y%m%d_%H%M%S)"
+    mkdir -p "$BACKUP_DIR"
+    
+    "$PRYSMCTL" validator slashing-protection-history export \
+        --datadir="${ZUG_DIR}/data/validators" \
+        --slashing-protection-export-dir="$BACKUP_DIR" > /dev/null 2>&1
+        
+    log_success "Slashing DB backed up"
+}
+
+execute_exit() {
+    WALLET_DIR="${ZUG_DIR}/data/validators/wallet"
+    PASS_FILE="${ZUG_DIR}/secrets/wallet_password"
+    [ ! -f "$PASS_FILE" ] && PASS_FILE="${ZUG_DIR}/data/validators/wallet_password.txt"
+    
+    log_header "Initiating Exit Protocol"
+    echo -e "  ${DIM}Follow the prompts to select validators:${RESET}"
+    echo ""
+    
+    "$PRYSMCTL" validator exit \
+        --wallet-dir="$WALLET_DIR" \
+        --beacon-rpc-provider="127.0.0.1:4000" \
+        --wallet-password-file="$PASS_FILE"
+        
+    if [ $? -eq 0 ]; then
+        log_success "Exit signal broadcasted"
+        echo -e "  ${COLOR_WARNING}DO NOT STOP YOUR VALIDATOR YET!${RESET}"
+        echo -e "  Wait until your exit epoch is passed (check explorer)."
+    else
+        log_error "Exit command failed"
+    fi
+}
+
+main() {
+    check_root
+    print_banner
+    
+    ensure_prysmctl
+    get_validator_info
+    show_warning
+    
+    if [[ "$*" != *"--force"* ]]; then
+        confirm_exit
+    fi
+    
+    backup_slashing_protection
+    execute_exit
+}
+
+main "$@"

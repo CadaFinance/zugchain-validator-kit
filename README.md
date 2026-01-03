@@ -1,71 +1,123 @@
-# ZugChain Validator Package
+# ZugChain Enterprise Validator Suite
 
-This package contains everything you need to join the ZugChain network as a validator.
+**Professional, secure, and production-ready validator infrastructure for the ZugChain network.**
 
-## Contents
+This package provides a unified "Master Wizard" to orchestrate the entire setup process, featuring systemd integration, security hardening, offline key management, and real-time monitoring.
 
-- `scripts/setup.sh`: **START HERE.** Installs dependencies, sets up the node, and generates your validator keys.
-- `scripts/recover.sh`: recover an existing validator using your mnemonic phrase.
-- `scripts/start.sh`: Start/Restart the validator services.
-- `scripts/add-validator.sh`: Add more validators to your running node.
-- `scripts/exit.sh`: Voluntarily exit the network (withdraw stake).
-- `configs/`: Critical chain configuration files (genesis, config.yml).
+---
 
-## Installation
+## 🚀 Quick Start
 
-### Option 1: Quick Start (Recommended)
-
-Run this one-liner on your Ubuntu machine to download and install:
+Launch the interactive Master Wizard to begin:
 
 ```bash
-git clone https://github.com/CadaFinance/zugchain-validator-kit.git && cd zugchain-validator-kit/scripts && chmod +x *.sh && sudo ./setup.sh
+# Clone and run
+git clone https://github.com/CadaFinance/zugchain-validator-kit.git
+cd zugchain-validator-kit/scripts
+chmod +x *.sh
+sudo ./setup.sh
 ```
 
-### Option 2: Manual Download
+**The wizard will guide you through:**
+1.  **System Check:** Verifies OS, RAM, CPU, and Dependencies.
+2.  **Mode Selection:** Choose between **Enterprise** (Recommended) or **Legacy** setup.
+3.  **Security Hardening:** Auto-configures Firewall (UFW) and SSH protection (Fail2ban).
+4.  **Key Management:** Supports importing air-gapped keys or generating strict local keys.
+5.  **Monitoring:** One-click installation of Prometheus & Grafana dashboards.
 
-1.  Download the latest release from the [Releases Page](https://github.com/CadaFinance/zugchain-validator-kit/releases).
-2.  Extract the archive:
-    ```bash
-    tar -xvf validator-package.tar.gz
-    cd zugchain-validator-kit/scripts
-    ```
-3.  Run the setup script:
-    ```bash
-    sudo ./setup.sh
-    ```
+---
 
-## Post-Installation
+## 🛡️ Enterprise Features
 
-After the setup is complete, your services will be running in the background.
+| Feature | Description |
+| :--- | :--- |
+| **Systemd Services** | Auto-restart, resource limits, and proper logging management. No more `nohup` or lost processes. |
+| **Security First** | Runs as non-root `zugchain` user. Configures UFW firewall and Fail2ban automatically. |
+| **Real-time Monitoring** | Built-in **Grafana Dashboard** (Port 3000) showing syncing status, peer count, and system health. |
+| **Offline Keys** | Maximum security workflow: Generate keys on an offline machine, import safely to the validator. |
+| **Slashing Protection** | Automated database exports during shutdown/exit to prevent double-signing. |
 
-1.  **Check Sync Status**:
-    ```bash
-    tail -f /opt/zugchain-validator/logs/beacon.log
-    ```
+---
 
-2.  **Validator Dashboard**:
-    (Add link to your explorer/dashboard if available)
+## 📊 Monitoring Dashboard
 
-## Management
+If selected during setup, access your dashboard at:
+`http://<YOUR_SERVER_IP>:3000`
 
-- **Start Services**: `sudo ./scripts/start.sh`
-- **View Logs**: `tail -f /opt/zugchain-validator/logs/beacon.log`
-- **Stop Services**: kill the processes manually or use `pkill -f 'geth|beacon-chain|validator'`
+**Credentials:** `admin` / `admin` (Change on first login)
 
-## Requirements
+**What you will see:**
+- **Sync Status:** Real-time blocks for Execution & Consensus clients.
+- **Validator Health:** Active status, attestation performance.
+- **System Metrics:** CPU, RAM, and Disk usage with alert thresholds.
 
-- Ubuntu 24.04 or later
-- 2 CPU Cores (4 recommended)  
-- 4GB RAM (16GB recommended)
-- 100GB SSD (500GB recommended)
+---
 
-## Network Requirements (Ports)
+## 📂 Scripts Reference
 
-You must open the following ports on your firewall/router to allow the node to peer with other nodes:
+All scripts use a unified design system for a consistent experience.
 
-| Type | Protocol | Port | Source | Description |
+| Script | Purpose |
+| :--- | :--- |
+| `setup.sh` | **Master Wizard** - Orchestrates installation, security, and monitoring. |
+| `health.sh` | **Health Check** - `sudo ./health.sh` for status. Supports `--json` for automation. |
+| `stop.sh` | **Graceful Shutdown** - Safely stops services and exports slashing protection DB. |
+| `start.sh` | **Service Manager** - Starts services via systemd (or legacy fallback). |
+| `add-validator.sh` | **Scaler** - Add more keys to a running node without downtime. |
+| `exit.sh` | **Voluntary Exit** - Withdraw your 32 ZUG stake (Requires 27h wait). |
+| `backup.sh` | **Full Backup** - Encrypts and archives keys, secrets, and databases. |
+| `keygen-offline.sh` | **Air-Gapped Tool** - Generate mnemonic/keys on a disconnected machine. |
+
+---
+
+## 🔧 Post-Installation Management
+
+### Managing Services
+```bash
+# Check status
+sudo systemctl status zugchain-validator
+
+# View logs (real-time)
+journalctl -fu zugchain-beacon
+```
+
+### Updates & Maintenance
+```bash
+# Update scripts
+git pull
+
+# Check node health
+sudo ./health.sh
+```
+
+---
+
+## 🌐 Network Configuration (Ports)
+
+For your validator to discover peers and sync successfully, you must allow traffic on the following ports. If you are using a Cloud Provider (AWS, DigitalOcean, etc.), configure your **Security Groups / Firewall** to allow these:
+
+| Service | Port | Protocol | Source | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
-| Custom TCP | TCP | **30303** | `0.0.0.0/0` | Receive Blocks (Geth P2P). |
-| Custom UDP | UDP | **30303** | `0.0.0.0/0` | Network Discovery. |
-| Custom TCP | TCP | **13000** | `0.0.0.0/0` | Vote/Attest (Beacon P2P). |
-| Custom UDP | UDP | **12000** | `0.0.0.0/0` | Network Discovery. |
+| **Geth (Execution)** | `30303` | **TCP & UDP** | `0.0.0.0/0` (Anywhere) | P2P Peer Discovery |
+| **Beacon (Consensus)** | `13000` | **TCP** | `0.0.0.0/0` (Anywhere) | P2P Peer Connection |
+| **Beacon (Consensus)** | `12000` | **UDP** | `0.0.0.0/0` (Anywhere) | P2P Peer Discovery |
+| **Grafana** | `3000` | TCP | *Restricted IP* | Monitoring Dashboard (Optional) |
+| **SSH** | `22` | TCP | *Restricted IP* | Server Access |
+
+> [!WARNING]
+> **DO NOT** open the following ports to the public internet:
+> - `8545`, `8551` (Geth RPC)
+> - `4000`, `3500` (Beacon RPC)
+> - `8080`, `9090` (Metrics)
+
+---
+
+## ⚠️ Security Best Practices
+
+1.  **Use Offline Keys:** Generate your mnemonic on a machine *never* connected to the internet using `./keygen-offline.sh`.
+2.  **Firewall:** The script enables UFW. Ensure your cloud provider (AWS/DigitalOcean) firewall also allows ports `30303` (TCP/UDP) and `13000` (TCP) / `12000` (UDP).
+3.  **Backups:** Run `./backup.sh --encrypt` regularly and store the artifact off-site.
+
+---
+
+*ZugChain Infrastructure Team*
