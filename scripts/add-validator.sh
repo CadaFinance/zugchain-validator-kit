@@ -176,8 +176,9 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    # We pipe 'yes' to handle potential "Are you sure?" prompts for non-checksummed addresses
+    # We pipe 'yes' to handle potential "Are you sure?" prompts
     yes | $DEPOSIT_CLI existing-mnemonic \
+        --language=english \
         --num_validators $num_to_add \
         --validator_start_index $start_index \
         --mnemonic="$MNEMONIC" \
