@@ -176,16 +176,16 @@ generate_keys() {
     
     log_info "Running key generation..."
     
-    log_info "Running key generation (v2.5 FINAL)..."
+    log_info "Running key generation (v2.6 FINAL FIX)..."
     
     # We use the OFFICIAL flags (Corrected):
     # --language=English (Global)
     # Reverting to --devnet_chain_setting (Required for custom chain)
-    # Using pipe '\ny\n' (Enter for language default, y for confirmation)
+    # Using pipe '$start_index\ny\n' because the tool prompts to confirm the index!
     
     rm -rf "$WORK_DIR/deposit_cli.log"
     
-    printf "\ny\n" | $DEPOSIT_CLI \
+    printf "%s\ny\n" "$start_index" | $DEPOSIT_CLI \
         --language=English \
         existing-mnemonic \
         --num_validators $num_to_add \
