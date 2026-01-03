@@ -209,6 +209,16 @@ generate_keys() {
     
     log_success "Generated $num_to_add new keys"
     
+    # Detect validator binary
+    if command -v validator &> /dev/null; then
+        VALIDATOR_BIN="validator"
+    elif [ -f "/usr/local/bin/validator" ]; then
+        VALIDATOR_BIN="/usr/local/bin/validator"
+    else
+        log_error "Validator binary not found! Please run setup.sh first."
+        exit 1
+    fi
+
     # Import
     mkdir -p ${ZUG_DIR}/data/validators/validator_keys/keystores
     cp "$WORK_DIR"/validator_keys/keystore-*.json ${ZUG_DIR}/data/validators/validator_keys/keystores/
@@ -218,7 +228,7 @@ generate_keys() {
     cp "$DEPOSIT_FILE" ${ZUG_DIR}/data/validators/validator_keys/latest_deposit_data.json
     
     log_info "Importing keys to wallet..."
-    validator accounts import \
+    $VALIDATOR_BIN accounts import \
         --keys-dir="${ZUG_DIR}/data/validators/validator_keys/keystores" \
         --wallet-dir="${ZUG_DIR}/data/validators/wallet" \
         --wallet-password-file=<(echo "$WALLET_PASSWORD") \
@@ -240,6 +250,12 @@ generate_keys() {
     echo -e "${ZUG_TEAL}║   ${ZUG_WHITE}${BOLD}DEPOSIT TRANSACTIONS REQUIRED${RESET}${ZUG_TEAL}                                            ║${RESET}"
     echo -e "${ZUG_TEAL}╚══════════════════════════════════════════════════════════════════════════════╝${RESET}"
     echo ""
+    
+    # Install eth-abi if missing (Correct package name is eth-abi, module is eth_abi)
+    if ! python3 -c "import eth_abi" 2>/dev/null; then
+         log_info "Installing missing python abi..."
+         pip3 install eth-abi --quiet --break-system-packages 2>/dev/null || pip3 install eth-abi --quiet 2>/dev/null
+    fi
     
     python3 << PYEOF
 from eth_abi import encode
