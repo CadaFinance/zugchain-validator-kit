@@ -136,6 +136,13 @@ def tty_input(prompt=""):
         return input(prompt)
 
 # ... (Imports omitted for brevity as they are unchanged) ...
+import sys
+import os
+import json
+import secrets
+import time
+import uuid
+from hashlib import sha256, pbkdf2_hmac
 
 # ... (Colors omitted) ...
 GREEN = '\033[0;32m'

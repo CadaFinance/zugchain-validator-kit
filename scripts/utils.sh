@@ -60,6 +60,10 @@ log_error() {
     echo -e "  ${COLOR_ERROR}${BOLD}ERROR${RESET}   │ $1" 
 }
 
+log_progress() {
+    echo -e "  ${ZUG_TEAL}>>${RESET} $1"
+}
+
 log_step() {
     echo ""
     echo -e "  ${ZUG_WHITE}${BOLD}→ Step $1:${RESET} $2"
