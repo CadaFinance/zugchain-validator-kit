@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist-python/
+eggs/
+*.egg
+
+# Build artifacts
+scripts/build/
+scripts/dist/
+*.exe
+*.spec
+scripts/build_log.txt
+
+# Validator keys (sensitive!)
+scripts/dist/validator_keys/
+**/validator_keys/
+*.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

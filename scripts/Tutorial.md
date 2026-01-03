@@ -1,0 +1,1 @@
+.\ZugChainDeposit.exe new-mnemonic --regular-withdrawal --num_validators 1 --chain zugchain

@@ -1,0 +1,161 @@
+==================================================
+  Building ZugChainDeposit.exe
+  Date: 03/01/2026  9:31:06.95
+==================================================
+
+[INFO] Checking Python...
+Python 3.10.11
+[INFO] Installing PyInstaller and dependencies...
+Requirement already satisfied: pyinstaller in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (6.17.0)
+Requirement already satisfied: mnemonic in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (0.21)
+Requirement already satisfied: py_ecc in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (8.0.0)
+Requirement already satisfied: eth-utils in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (5.3.1)
+Requirement already satisfied: pycryptodome in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (3.23.0)
+Requirement already satisfied: packaging>=22.0 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from pyinstaller) (24.2)
+Requirement already satisfied: pyinstaller-hooks-contrib>=2025.9 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from pyinstaller) (2025.11)
+Requirement already satisfied: pywin32-ctypes>=0.2.1 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from pyinstaller) (0.2.3)
+Requirement already satisfied: altgraph in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from pyinstaller) (0.17.5)
+Requirement already satisfied: setuptools>=42.0.0 in c:\program files\windowsapps\pythonsoftwarefoundation.python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\site-packages (from pyinstaller) (65.5.0)
+Requirement already satisfied: pefile>=2022.5.30 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from pyinstaller) (2024.8.26)
+Requirement already satisfied: eth-typing>=3.0.0 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from py_ecc) (5.2.1)
+Requirement already satisfied: cytoolz>=0.10.1 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from eth-utils) (1.1.0)
+Requirement already satisfied: eth-hash>=0.3.1 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from eth-utils) (0.7.1)
+Requirement already satisfied: pydantic<3,>=2.0.0 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from eth-utils) (2.10.6)
+Requirement already satisfied: toolz>=0.8.0 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from cytoolz>=0.10.1->eth-utils) (1.1.0)
+Requirement already satisfied: typing_extensions>=4.5.0 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from eth-typing>=3.0.0->py_ecc) (4.12.2)
+Requirement already satisfied: annotated-types>=0.6.0 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from pydantic<3,>=2.0.0->eth-utils) (0.7.0)
+Requirement already satisfied: pydantic-core==2.27.2 in c:\users\dark\appdata\local\packages\pythonsoftwarefoundation.python.3.10_qbz5n2kfra8p0\localcache\local-packages\python310\site-packages (from pydantic<3,>=2.0.0->eth-utils) (2.27.2)
+
+[notice] A new release of pip is available: 23.0.1 -> 25.3
+[notice] To update, run: C:\Users\DARK\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\python.exe -m pip install --upgrade pip
+[INFO] Building EXE...
+Running: python -m PyInstaller ...
+131 INFO: PyInstaller: 6.17.0, contrib hooks: 2025.11
+131 INFO: Python: 3.10.11
+139 INFO: Platform: Windows-10-10.0.19045-SP0
+139 INFO: Python environment: C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0
+140 INFO: wrote .\ZugChainDeposit.spec
+2939 INFO: Module search paths (PYTHONPATH):
+['C:\\Users\\DARK\\Desktop\\New folder (2)\\validator-package\\scripts',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\python310.zip',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\DLLs',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib',
+ 'C:\\Users\\DARK\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0',
+ 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages',
+ 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\win32',
+ 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\win32\\lib',
+ 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\Pythonwin',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\site-packages',
+ 'C:\\Users\\DARK\\Desktop\\New folder (2)\\validator-package\\scripts']
+164 WARNING: discover_hook_directories: Failed to process hook entry point 'EntryPoint(name='hook-dirs', value='rapidfuzz.__pyinstaller:get_hook_dirs', group='pyinstaller40')': AttributeError: module 'rapidfuzz.__pyinstaller' has no attribute 'get_hook_dirs'
+3264 INFO: Appending 'datas' from .spec
+3274 INFO: checking Analysis
+3299 INFO: Building because C:\Users\DARK\Desktop\New folder (2)\validator-package\scripts\keygen.py changed
+3299 INFO: Looking for Python shared library...
+3299 INFO: Using Python shared library: C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\python310.dll
+3299 INFO: Running Analysis Analysis-00.toc
+3299 INFO: Target bytecode optimization level: 0
+3299 INFO: Initializing module dependency graph...
+3301 INFO: Initializing module graph hook caches...
+3318 INFO: Analyzing modules for base_library.zip ...
+3775 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+4205 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+5279 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+6198 INFO: Caching module dependency graph...
+6236 INFO: Analyzing C:\Users\DARK\Desktop\New folder (2)\validator-package\scripts\keygen.py
+6292 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+6298 INFO: Processing standard module hook 'hook-mnemonic.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+6321 INFO: Processing standard module hook 'hook-eth_typing.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+6325 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+6326 INFO: SetuptoolsInfo: initializing cached setuptools info...
+7147 INFO: Processing standard module hook 'hook-eth_utils.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+7161 INFO: Processing standard module hook 'hook-eth_hash.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+7609 INFO: Processing standard module hook 'hook-cytoolz.itertoolz.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+7695 INFO: Processing standard module hook 'hook-pydantic.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+C:\Users\DARK\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\pydantic\experimental\__init__.py:7: PydanticExperimentalWarning: This module is experimental, its contents are subject to change and deprecation.
+  warnings.warn(
+8489 INFO: Processing standard module hook 'hook-zoneinfo.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+8507 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+8906 INFO: Processing standard module hook 'hook-eth_utils.network.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+8991 INFO: Processing standard module hook 'hook-Crypto.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+9742 INFO: Processing standard module hook 'hook-pycparser.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+10191 INFO: Processing standard module hook 'hook-setuptools.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+10196 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+10196 INFO: Processing pre-find-module-path hook 'hook-distutils.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+11064 INFO: Processing standard module hook 'hook-distutils.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+11111 INFO: Processing standard module hook 'hook-distutils.util.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+11136 INFO: Processing standard module hook 'hook-_osx_support.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+11350 INFO: Processing standard module hook 'hook-pkg_resources.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+12426 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+12463 INFO: Processing pre-safe-import-module hook 'hook-importlib_metadata.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+12477 INFO: Processing standard module hook 'hook-importlib_metadata.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+12490 INFO: Processing pre-safe-import-module hook 'hook-zipp.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+12515 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+12567 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+13423 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+14064 INFO: Analyzing hidden import 'py_ecc.bls12_381'
+14072 INFO: Analyzing hidden import 'py_ecc.bn128'
+14080 INFO: Analyzing hidden import 'py_ecc.optimized_bn128'
+14089 INFO: Analyzing hidden import 'py_ecc.secp256k1'
+14094 INFO: Analyzing hidden import 'eth_utils.__main__'
+14096 INFO: Analyzing hidden import 'eth_utils.curried'
+14107 INFO: Analyzing hidden import 'eth_utils.typing'
+14109 INFO: Analyzing hidden import 'eth_hash.backends.pycryptodome'
+14111 INFO: Analyzing hidden import 'eth_hash.backends.pysha3'
+14113 INFO: Processing module hooks (post-graph stage)...
+14212 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+14298 INFO: Processing pre-safe-import-module hook 'hook-win32com.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\pre_safe_import_module'
+14383 INFO: Processing standard module hook 'hook-win32com.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+14385 INFO: Processing standard module hook 'hook-pythoncom.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+14466 INFO: Processing standard module hook 'hook-pywintypes.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+15144 INFO: Processing standard module hook 'hook-jinja2.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+15972 INFO: Processing standard module hook 'hook-setuptools._vendor.importlib_metadata.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+16065 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+16408 INFO: Processing standard module hook 'hook-difflib.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks'
+16880 INFO: Processing standard module hook 'hook-tzdata.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+17740 INFO: Performing binary vs. data reclassification (777 entries)
+17854 INFO: Looking for ctypes DLLs
+17871 INFO: Analyzing run-time hooks ...
+17876 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\rthooks'
+17878 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\rthooks'
+17880 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\rthooks'
+17881 INFO: Including run-time hook 'pyi_rth_setuptools.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\rthooks'
+17882 INFO: Including run-time hook 'pyi_rth_pkgres.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\PyInstaller\\hooks\\rthooks'
+17885 INFO: Including run-time hook 'pyi_rth_pywintypes.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\rthooks'
+17886 INFO: Including run-time hook 'pyi_rth_pythoncom.py' from 'C:\\Users\\DARK\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python310\\site-packages\\_pyinstaller_hooks_contrib\\rthooks'
+17948 INFO: Creating base_library.zip...
+17966 INFO: Looking for dynamic libraries
+C:\Users\DARK\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\pydantic\experimental\__init__.py:7: PydanticExperimentalWarning: This module is experimental, its contents are subject to change and deprecation.
+  warnings.warn(
+19331 INFO: Extra DLL search directories (AddDllDirectory): []
+19331 INFO: Extra DLL search directories (PATH): []
+20070 INFO: Warnings written to C:\Users\DARK\Desktop\New folder (2)\validator-package\scripts\build\ZugChainDeposit\warn-ZugChainDeposit.txt
+20212 INFO: Graph cross-reference written to C:\Users\DARK\Desktop\New folder (2)\validator-package\scripts\build\ZugChainDeposit\xref-ZugChainDeposit.html
+20265 INFO: checking PYZ
+20318 INFO: checking PKG
+20326 INFO: Building because toc changed
+20327 INFO: Building PKG (CArchive) ZugChainDeposit.pkg
+23638 INFO: Building PKG (CArchive) ZugChainDeposit.pkg completed successfully.
+23656 INFO: Bootloader C:\Users\DARK\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\PyInstaller\bootloader\Windows-64bit-intel\run.exe
+23656 INFO: checking EXE
+23663 INFO: Building because toc changed
+23663 INFO: Building EXE from EXE-00.toc
+23665 INFO: Copying bootloader EXE to C:\Users\DARK\Desktop\New folder (2)\validator-package\scripts\dist\ZugChainDeposit.exe
+23711 INFO: Copying icon to EXE
+23752 INFO: Copying 0 resources to EXE
+23752 INFO: Embedding manifest in EXE
+23795 INFO: Appending PKG archive to EXE
+23857 INFO: Fixing EXE headers
+24142 INFO: Building EXE from EXE-00.toc completed successfully.
+24160 INFO: Build complete! The results are available in: C:\Users\DARK\Desktop\New folder (2)\validator-package\scripts\dist
+
+[SUCCESS] EXE created successfully!
+Location: dist\ZugChainDeposit.exe
+
+Done.
