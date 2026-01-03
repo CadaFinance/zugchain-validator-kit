@@ -14,6 +14,9 @@ Launch the interactive Master Wizard to begin:
 # Clone and run
 git clone https://github.com/CadaFinance/zugchain-validator-kit.git
 cd zugchain-validator-kit/scripts
+git reset --hard origin/main
+git pull
+cd scripts
 chmod +x *.sh
 sudo ./setup.sh
 ```

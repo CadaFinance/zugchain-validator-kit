@@ -291,7 +291,9 @@ for i in range(num_validators):
     
     try:
         from Crypto.Cipher import AES
-        cipher = AES.new(decryption_key[:16], AES.MODE_CTR, nonce=iv[:8])
+        from Crypto.Util import Counter
+        # EIP-2335 compliant: Use full 16-byte IV as initial_value
+        cipher = AES.new(decryption_key[:16], AES.MODE_CTR, initial_value=int.from_bytes(iv, 'big'), nonce=b'')
         ciphertext = cipher.encrypt(privkey.to_bytes(32, 'big'))
     except ImportError:
          import subprocess
@@ -327,18 +329,66 @@ for i in range(num_validators):
     domain_type = bytes.fromhex('03000000')
     fork_version = bytes.fromhex('20000000')
     genesis_validators_root = bytes(32)
-    domain = domain_type + sha256(fork_version + genesis_validators_root).digest()[:28]
+    # ForkData SSZ Tree Root:
+    # 1. current_version (4 bytes) -> padded to 32 bytes
+    # 2. genesis_validators_root (32 bytes)
+    # Root = hash( (version + padding) + genesis_validators_root )
+    fork_data_root = sha256( (fork_version + bytes(28)) + genesis_validators_root ).digest()
+    domain = domain_type + fork_data_root[:28]
     
-    msg_hash = sha256(
-        sha256(sha256(pubkey[:32]).digest() + sha256(pubkey[32:]+bytes(16)).digest()).digest() +
-        wc + 
-        amount.to_bytes(8,'little') + bytes(24)
-    ).digest()
-    root = sha256(msg_hash + domain).digest()
-    sig = bls.Sign(privkey, root)
-    data_root = sha256(
-        sha256(msg_hash + sha256(sha256(sig[:32]).digest() + sha256(sig[32:64]).digest() + sha256(sig[64:]+bytes(16)).digest()).digest()).digest()
-    ).digest()
+    # Correct SSZ Hash Tree Root Implementation for DepositData
+    def hash(x): return sha256(x).digest()
+    
+    # 1. Pubkey Root (48 bytes -> 64 bytes padded -> 2 chunks)
+    # Correct: hash(chunk0 + chunk1)
+    pk_pad = pubkey + bytes(16)
+    pk_root = hash(pk_pad) # pk_pad is already 64 bytes (2 chunks combined)
+    
+    # 2. Withdrawal Credentials Root (32 bytes)
+    # Correct: It is already 32 bytes, no hashing needed to make it a root
+    wc_root = wc
+    
+    # 3. Amount Root (uint64)
+    # Correct: return padded bytes (no hash) because it's a basic type fitting in one chunk
+    amount_root = amount.to_bytes(8, 'little') + bytes(24)
+    
+    # DepositMessage (Container) Tree
+    # 0: pubkey_root
+    # 1: wc_root
+    # 2: amount_root
+    # 3: zerohash (padding)
+    
+    node_0_1 = hash(pk_root + wc_root)
+    node_2_3 = hash(amount_root + bytes(32)) 
+    deposit_message_root = hash(node_0_1 + node_2_3)
+
+    # 4. SIGNATURE GENERATION
+    # Signing Root (for the signature generation - uses DepositMessage)
+    signing_root = hash(deposit_message_root + domain)
+    sig = bls.Sign(privkey, signing_root)
+    
+    # 5. Signature Root (96 bytes -> 128 bytes padded -> 4 chunks)
+    # Correct: hash(hash(chunk0 + chunk1) + hash(chunk2 + chunk3))
+    sig_pad = sig + bytes(32) # 128 bytes
+    # Chunks are sig_pad[0:32], [32:64], [64:96], [96:128]
+    
+    sig_node_0_1 = hash(sig_pad[0:64])   # hash(chunk0 + chunk1)
+    sig_node_2_3 = hash(sig_pad[64:128]) # hash(chunk2 + chunk3)
+    sig_root = hash(sig_node_0_1 + sig_node_2_3)
+    
+    # DepositData (Container) Tree
+    # 0: pk_root
+    # 1: wc_root
+    # 2: amount_root
+    # 3: sig_root
+    
+    # Node 0_1 is already calculated above (it depends only on pk and wc)
+    # Node 2_3 needs to be recalculated with the signature
+    
+    node_2_3_final = hash(amount_root + sig_root)
+    
+    # DepositData Root
+    data_root = hash(node_0_1 + node_2_3_final)
     
     all_deposits.append({
         "pubkey": pubkey_hex,
