@@ -125,7 +125,48 @@ install_dependencies() {
          log_success "Prysm already installed"
     fi
     
-    # ... (rest of function)
+    # Install Deposit CLI (Binary Release)
+    if [ ! -f "/opt/ethstaker-deposit-cli/deposit" ]; then
+        log_info "Installing Deposit CLI..."
+        rm -rf /opt/ethstaker-deposit-cli
+        mkdir -p /opt/ethstaker-deposit-cli
+        
+        cd /tmp
+        wget -q https://github.com/eth-educators/ethstaker-deposit-cli/releases/download/v1.2.2/ethstaker_deposit-cli-b13dcb9-linux-amd64.tar.gz -O deposit_cli.tar.gz
+        tar -xzf deposit_cli.tar.gz
+        mv ethstaker_deposit-cli-b13dcb9-linux-amd64/* /opt/ethstaker-deposit-cli/
+        chmod +x /opt/ethstaker-deposit-cli/deposit
+        rm -rf deposit_cli.tar.gz ethstaker_deposit-cli*
+    fi
+    log_success "Deposit CLI installed"
+    
+    # Python helpers
+    pip3 install eth-utils --quiet --break-system-packages 2>/dev/null || pip3 install eth-utils --quiet 2>/dev/null
+}
+
+setup_directories() {
+    log_header "Directory Configuration"
+    
+    # Create structure
+    mkdir -p ${ZUG_DIR}/{data,logs,config,secrets,backups,tools}
+    mkdir -p ${ZUG_DIR}/data/{geth,beacon,validators}
+    
+    # Copy configs
+    cp "${CONFIGS_SRC}/genesis.json" "${ZUG_DIR}/config/"
+    cp "${CONFIGS_SRC}/genesis.ssz" "${ZUG_DIR}/config/"
+    cp "${CONFIGS_SRC}/config.yml" "${ZUG_DIR}/config/"
+    
+    # Generate JWT
+    if [ ! -f "${ZUG_DIR}/secrets/jwt.hex" ]; then
+        openssl rand -hex 32 | tr -d "\n" > "${ZUG_DIR}/secrets/jwt.hex"
+        chmod 600 "${ZUG_DIR}/secrets/jwt.hex"
+        
+        # Legacy compat
+        cp "${ZUG_DIR}/secrets/jwt.hex" "${ZUG_DIR}/data/jwt.hex"
+    fi
+    
+    log_success "Directories and configurations active"
+}
 
 init_node() {
     log_header "Initializing Blockchain Node"
