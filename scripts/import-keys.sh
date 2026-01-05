@@ -186,6 +186,28 @@ main() {
     import_keys "$KEYS_DIR" "$KEYSTORE_PASS"
     
     [ "$SKIP_DEPOSIT" = false ] && display_deposit_hex
+    
+    # Restart validator service if running (for adding new validators to existing setup)
+    if systemctl is-active --quiet zugchain-validator 2>/dev/null; then
+        log_header "Restarting Validator Service"
+        log_info "Restarting to load new validator keys..."
+        systemctl restart zugchain-validator
+        sleep 3
+        
+        if systemctl is-active --quiet zugchain-validator; then
+            log_success "Validator service restarted successfully"
+            log_info "New validators will start attesting after activation"
+        else
+            log_error "Validator service failed to restart. Check: journalctl -u zugchain-validator"
+        fi
+    else
+        log_info "Validator service not running. Start with: sudo systemctl start zugchain-validator"
+    fi
+    
+    echo ""
+    log_success "Import complete!"
+    echo -e "  ${DIM}Run 'sudo ./health.sh' to verify all validators are active${RESET}"
+    echo ""
 }
 
 main "$@"
