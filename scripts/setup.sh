@@ -200,31 +200,24 @@ init_node() {
 handle_keys() {
     log_header "Validator Key Management"
     
-    echo -e "  ${ZUG_WHITE}How would you like to handle validator keys?${RESET}"
-    echo -e "  ${DIM}(Recommended: Option 1 for maximum security)${RESET}"
+    echo -e "  ${ZUG_WHITE}Import validator keys generated on an OFFLINE (Air-gapped) machine${RESET}"
+    echo -e "  ${DIM}This is the recommended and most secure method.${RESET}"
     echo ""
-    echo -e "  ${ZUG_TEAL}[1]${RESET} Import keys generated OFFLINE (Air-gapped)"
-    echo -e "  ${ZUG_TEAL}[2]${RESET} Generate keys LOCALLY on this server"
+    echo -e "  ${COLOR_WARNING}If you haven't generated keys yet:${RESET}"
+    echo -e "  ${DIM}1. Download ZugChain Deposit CLI from GitHub Releases${RESET}"
+    echo -e "  ${DIM}2. Run on an offline machine: ./deposit new-mnemonic --chain=zugchain${RESET}"
+    echo -e "  ${DIM}3. Transfer the validator_keys folder to this server${RESET}"
     echo ""
-    log_prompt "Select option [1-2]"
-    read -r KEY_OPT
     
-    if [ "$KEY_OPT" == "1" ]; then
-        log_info "Starting Import Wizard..."
-        echo ""
-        log_prompt "Enter path to offline keys folder"
-        read -r KEYS_PATH
-        
-        if [ -d "$KEYS_PATH" ]; then
-            bash "${SCRIPT_DIR}/import-keys.sh" --keys-dir "$KEYS_PATH"
-        else
-            log_error "Directory not found. Falling back to local generation menu."
-            handle_keys
-        fi
-        
+    log_prompt "Enter path to your validator_keys folder"
+    read -r KEYS_PATH
+    
+    if [ -d "$KEYS_PATH" ]; then
+        bash "${SCRIPT_DIR}/import-keys.sh" --keys-dir "$KEYS_PATH"
     else
-        log_warning "Generating keys on an online machine has risks."
-        bash "${SCRIPT_DIR}/add-validator.sh" --setup-mode
+        log_error "Directory not found: $KEYS_PATH"
+        log_info "Please verify the path and try again."
+        handle_keys
     fi
 }
 

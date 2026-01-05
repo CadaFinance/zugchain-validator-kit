@@ -15,6 +15,7 @@ scripts/dist/
 *.exe
 *.spec
 scripts/build_log.txt
+zugchain-deposit-cli/
 
 # Validator keys (sensitive!)
 scripts/dist/validator_keys/
