@@ -127,6 +127,23 @@ EOF
 create_validator_service() {
     log_info "Creating Validator service..."
     
+    # Get fee recipient from user or use default
+    if [ -z "$FEE_RECIPIENT" ]; then
+        echo ""
+        echo -e "  ${ZUG_WHITE}${BOLD}Fee Recipient Address${RESET}"
+        echo -e "  ${DIM}This address receives block proposal rewards (tips/MEV).${RESET}"
+        echo -e "  ${DIM}Can be the same as your withdrawal address.${RESET}"
+        echo ""
+        log_prompt "Enter fee recipient address (0x...)"
+        read -r FEE_RECIPIENT
+        
+        # Validate address format
+        if [[ ! "$FEE_RECIPIENT" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+            log_error "Invalid address format. Using default burn address."
+            FEE_RECIPIENT="0x0000000000000000000000000000000000000000"
+        fi
+    fi
+    
     cat > /etc/systemd/system/zugchain-validator.service <<EOF
 [Unit]
 Description=ZugChain Validator Client
@@ -146,6 +163,7 @@ ExecStart=/usr/local/bin/validator \\
     --wallet-password-file=${ZUG_DIR}/secrets/wallet_password \\
     --beacon-rpc-provider=127.0.0.1:4000 \\
     --chain-config-file=${ZUG_DIR}/config/config.yml \\
+    --suggested-fee-recipient=${FEE_RECIPIENT} \\
     --monitoring-host=0.0.0.0 --monitoring-port=8081 \\
     --accept-terms-of-use
 

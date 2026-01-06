@@ -89,9 +89,10 @@ import_keys() {
         # Create wallet if needed
         if [ ! -d "${ZUG_DIR}/data/validators/wallet/direct" ]; then
             log_info "Creating new wallet..."
-            validator wallet create \
+            echo "" | validator wallet create \
                 --wallet-dir="${ZUG_DIR}/data/validators/wallet" \
                 --wallet-password-file="${ZUG_DIR}/secrets/wallet_password" \
+                --keymanager-kind=direct \
                 --accept-terms-of-use > /dev/null 2>&1
         fi
         
@@ -123,36 +124,27 @@ display_deposit_hex() {
     [ ! -f "$DEPOSIT_FILE" ] && DEPOSIT_FILE=$(find ${ZUG_DIR}/data/validators -name "deposit_data-*.json" | head -n1)
     
     if [ ! -f "$DEPOSIT_FILE" ]; then
-        log_warning "Deposit data not found - skipping hex display"
+        log_warning "Deposit data not found"
         return
     fi
     
+    # Count validators
+    local count=$(python3 -c "import json; print(len(json.load(open('$DEPOSIT_FILE'))))" 2>/dev/null || echo "?")
+    
     echo ""
     echo -e "${ZUG_TEAL}╔══════════════════════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${ZUG_TEAL}║   ${ZUG_WHITE}${BOLD}DEPOSIT TRANSACTIONS REQUIRED${RESET}${ZUG_TEAL}                                            ║${RESET}"
+    echo -e "${ZUG_TEAL}║   ${ZUG_WHITE}${BOLD}DEPOSIT REQUIRED${RESET}${ZUG_TEAL}                                                        ║${RESET}"
     echo -e "${ZUG_TEAL}╚══════════════════════════════════════════════════════════════════════════════╝${RESET}"
     echo ""
-    
-    python3 << PYEOF
-from eth_abi import encode
-import json
-with open('$DEPOSIT_FILE', 'r') as f:
-    deposits = json.load(f)
-
-print(f"\033[1;37mFound {len(deposits)} validator(s) requiring deposits:\033[0m")
-selector = '0x22895118'
-
-for i, data in enumerate(deposits):
-    print(f"\n\033[1;33mVALIDATOR #{i+1}\033[0m")
-    encoded = encode(['bytes', 'bytes', 'bytes', 'bytes32'], [bytes.fromhex(data['pubkey']), bytes.fromhex(data['withdrawal_credentials']), bytes.fromhex(data['signature']), bytes.fromhex(data['deposit_data_root'])])
-    print(f"\033[0;36m{selector + encoded.hex()}\033[0m")
-    print("\033[2m----------------------------------------\033[0m")
-PYEOF
-
+    echo -e "  ${ZUG_WHITE}Found ${BOLD}${count}${RESET}${ZUG_WHITE} validator(s) requiring deposit.${RESET}"
     echo ""
-    echo -e "  ${ZUG_WHITE}${BOLD}INSTRUCTIONS:${RESET}"
-    echo -e "  1. Send ${COLOR_WARNING}32 ZUG${RESET} to ${ZUG_TEAL}${DEPOSIT_CONTRACT}${RESET}"
-    echo -e "  2. Use Hex Data above"
+    echo -e "  ${COLOR_WARNING}${BOLD}IMPORTANT:${RESET} Your validators will NOT become active until you"
+    echo -e "  complete the deposit process on the ZugChain Launchpad."
+    echo ""
+    echo -e "  ${ZUG_TEAL}${BOLD}Next Steps:${RESET}"
+    echo -e "  1. Go to ${BOLD}https://zugchain.io/launchpad${RESET}"
+    echo -e "  2. Upload your ${BOLD}deposit_data.json${RESET} file"
+    echo -e "  3. Send ${BOLD}32 ZUG${RESET} per validator to activate"
     echo ""
 }
 

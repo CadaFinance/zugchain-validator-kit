@@ -231,66 +231,42 @@ main() {
     cleanup_previous_state
     checks_preflight
     
-    # Mode Selection
-    echo -e "  ${ZUG_WHITE}${BOLD}Select Installation Mode:${RESET}"
-    echo -e "  ${ZUG_TEAL}[1] Enterprise Setup${RESET} (Recommended)"
-    echo -e "      ${DIM}• Systemd Services (Auto-restart, Logging)${RESET}"
-    echo -e "      ${DIM}• Security Hardening (Firewall, Fail2ban)${RESET}"
-    echo -e "      ${DIM}• Monitoring Stack (Prometheus, Grafana)${RESET}"
-    echo -e "      ${DIM}• Offline Key Support${RESET}"
-    echo ""
-    echo -e "  ${ZUG_TEAL}[2] Legacy Setup${RESET}"
-    echo -e "      ${DIM}• Basic nohup background processes${RESET}"
-    echo -e "      ${DIM}• No enhanced security or monitoring${RESET}"
-    echo ""
-    
-    log_prompt "Enter choice [1-2]"
-    read -r MODE
-    
     # Start Installation
     install_dependencies
     setup_directories
     init_node
     
-    if [ "$MODE" == "1" ]; then
-        # ENTERPRISE FLOW
-        
-        # 1. Security Hardening
-        log_header "Security Hardening"
-        bash "${SCRIPT_DIR}/security-harden.sh"
-        
-        # 2. Key Management
-        handle_keys
-        
-        # 3. Service Setup
-        log_header "Systemd Service Configuration"
-        bash "${SCRIPT_DIR}/zugchain-services.sh"
-        
-        # 4. Monitoring
-        log_header "Monitoring Setup"
-        log_prompt "Install Prometheus & Grafana dashboard? [Y/n]"
-        read -r MON_OPT
-        if [[ "$MON_OPT" =~ ^[Yy] || -z "$MON_OPT" ]]; then
-            bash "${SCRIPT_DIR}/monitor-setup.sh"
-        else
-            log_info "Skipping monitoring setup"
-        fi
-        
-        # 5. Start Services
-        log_header "Starting Services"
-        systemctl daemon-reload
-        systemctl enable zugchain-geth zugchain-beacon zugchain-validator
-        systemctl start zugchain-geth zugchain-beacon zugchain-validator
-        
-        # 6. Verify Health
-        bash "${SCRIPT_DIR}/health.sh" --quiet
-        
+    # ENTERPRISE FLOW
+    
+    # 1. Security Hardening
+    log_header "Security Hardening"
+    bash "${SCRIPT_DIR}/security-harden.sh"
+    
+    # 2. Key Management
+    handle_keys
+    
+    # 3. Service Setup
+    log_header "Systemd Service Configuration"
+    bash "${SCRIPT_DIR}/zugchain-services.sh"
+    
+    # 4. Monitoring
+    log_header "Monitoring Setup"
+    log_prompt "Install Prometheus & Grafana dashboard? [Y/n]"
+    read -r MON_OPT
+    if [[ "$MON_OPT" =~ ^[Yy] || -z "$MON_OPT" ]]; then
+        bash "${SCRIPT_DIR}/monitor-setup.sh"
     else
-        # LEGACY FLOW (Fallback)
-        log_warning "Running in Legacy Mode..."
-        handle_keys
-        bash "${SCRIPT_DIR}/start.sh" --legacy
+        log_info "Skipping monitoring setup"
     fi
+    
+    # 5. Start Services
+    log_header "Starting Services"
+    systemctl daemon-reload
+    systemctl enable zugchain-geth zugchain-beacon zugchain-validator
+    systemctl start zugchain-geth zugchain-beacon zugchain-validator
+    
+    # 6. Verify Health
+    bash "${SCRIPT_DIR}/health.sh" --quiet
     
     # FINAL SUMMARY
     clear
@@ -303,7 +279,7 @@ main() {
     echo -e "    • Stop Node:       ${BOLD}sudo ./stop.sh${RESET}"
     echo -e "    • View Logs:       ${BOLD}journalctl -fu zugchain-beacon${RESET}"
     
-    if [ "$MODE" == "1" ] && [[ "$MON_OPT" =~ ^[Yy] || -z "$MON_OPT" ]]; then
+    if [[ "$MON_OPT" =~ ^[Yy] || -z "$MON_OPT" ]]; then
         IP=$(curl -s ifconfig.me)
         echo -e "    • Dashboard:       ${BOLD}http://${IP}:3000${RESET} (admin/admin)"
     fi
