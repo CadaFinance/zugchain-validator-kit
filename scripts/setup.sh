@@ -197,6 +197,61 @@ init_node() {
     fi
 }
 
+handle_slashing_import() {
+    log_header "Disaster Recovery / Migration"
+    
+    echo -e "  ${ZUG_WHITE}Are you migrating from another server?${RESET}"
+    echo -e "  ${DIM}Importing your slashing protection history is CRITICAL to avoid penalties.${RESET}"
+    echo ""
+    log_prompt "Do you have a slashing_protection.json file to import? [y/N]"
+    read -r MIGRATE_OPT
+    
+    if [[ "$MIGRATE_OPT" =~ ^[Yy] ]]; then
+        log_prompt "Enter path to slashing_protection.json"
+        read -r SLASH_PATH
+        
+        if [ -f "$SLASH_PATH" ]; then
+            log_info "Importing slashing protection data..."
+            
+            # Ensure prysmctl exists (it should from dependencies)
+            if [ ! -f "${ZUG_DIR}/tools/prysmctl" ]; then
+                 mkdir -p "${ZUG_DIR}/tools"
+                 # Fallback download if missing
+                 wget -q "https://github.com/prysmaticlabs/prysm/releases/download/${PRYSM_VERSION}/prysmctl-${PRYSM_VERSION}-linux-amd64" -O "${ZUG_DIR}/tools/prysmctl"
+                 chmod +x "${ZUG_DIR}/tools/prysmctl"
+            fi
+
+            "${ZUG_DIR}/tools/prysmctl" validator slashing-protection-history import \
+                --datadir="${ZUG_DIR}/data/validators" \
+                --slashing-protection-json-file="$SLASH_PATH" > /dev/null 2>&1
+            
+            if [ $? -eq 0 ]; then
+                log_success "Slashing protection imported successfully!"
+            else
+                # Try with main validator binary if prysmctl fails (version compat)
+                validator slashing-protection-history import \
+                    --datadir="${ZUG_DIR}/data/validators" \
+                    --slashing-protection-json-file="$SLASH_PATH" > /dev/null 2>&1
+                
+                if [ $? -eq 0 ]; then
+                     log_success "Slashing protection imported successfully (via validator binary)!"
+                else
+                     log_error "Import failed! check logs."
+                     log_warning "Risk of double signing. Abort if unsure."
+                     log_prompt "Continue anyway? [y/N]"
+                     read -r CONT
+                     if [[ ! "$CONT" =~ ^[Yy] ]]; then exit 1; fi
+                fi
+            fi
+        else
+            log_error "File not found: $SLASH_PATH"
+            handle_slashing_import # Retry
+        fi
+    else
+        log_info "Skipping migration import (Fresh install assumed)"
+    fi
+}
+
 handle_keys() {
     log_header "Validator Key Management"
     
@@ -241,6 +296,9 @@ main() {
     # 1. Security Hardening
     log_header "Security Hardening"
     bash "${SCRIPT_DIR}/security-harden.sh"
+    
+    # 1.5 Migration / Slashing Protection
+    handle_slashing_import
     
     # 2. Key Management
     handle_keys
